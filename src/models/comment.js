@@ -5,13 +5,10 @@ const commentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    comments: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Comment',
-        }
-    ]
+    userEmail : {
+        type: String,
+    }
 }, {timestamps: true});
 
 const Comment = mongoose.model('Comment', commentSchema); 
-module.exports = Comment;
+export default Comment;

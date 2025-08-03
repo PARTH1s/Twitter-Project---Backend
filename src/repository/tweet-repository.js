@@ -1,4 +1,4 @@
-const Tweet = require('../models/tweet');  
+import Tweet from '../models/tweet.js';
 
 class TweetRepository {
     async getAll(offset = 0, limit = 10) {
@@ -46,7 +46,7 @@ class TweetRepository {
 
     async getWithComments(id) {
         try {
-            const tweet = await Tweet.findById(id).populate({path:'comments'}).lean();
+            const tweet = await Tweet.findById(id).populate({ path: 'comments' }).lean();
             return tweet;
         } catch (error) {
             console.error('Error in getById:', error);
@@ -55,4 +55,4 @@ class TweetRepository {
     }
 }
 
-module.exports = TweetRepository;
+export default TweetRepository;

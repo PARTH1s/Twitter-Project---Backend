@@ -1,5 +1,4 @@
-const { TweetRepository } = require('../repository/index');
-const { HashtagRepository } = require('../repository/index');
+import { TweetRepository, HashtagRepository } from '../repository/index';
 
 class TweetService {
     constructor() {
@@ -27,11 +26,11 @@ class TweetService {
         // Prepare hashtag objects for bulk create
         newTags = newTags.map(tag => ({ title: tag, tweets: [tweet._id] }));
 
-        console.log("newTags.length ",newTags.length )
+        console.log("newTags.length ", newTags.length)
         // Bulk insert new hashtags
         if (newTags.length > 0) {
             await this.hashtagRepository.bulkCreate(newTags);
-            alreadyPresentTags.forEach((tag)=>{
+            alreadyPresentTags.forEach((tag) => {
                 tag.tweet.push(tweet.id);
                 tag.save();
             })
@@ -42,4 +41,4 @@ class TweetService {
 
 }
 
-module.exports = TweetService;
+export default TweetService;
