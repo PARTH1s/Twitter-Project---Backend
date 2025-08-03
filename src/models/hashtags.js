@@ -5,9 +5,9 @@ const hashtagSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    tweets:[
+    tweets: [
         {
-            type:mongoose.Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: 'Tweet'
         }
     ]
