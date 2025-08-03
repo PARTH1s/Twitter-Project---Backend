@@ -1,4 +1,4 @@
-const Tweet = require('../models/tweet');  // Adjust the path if needed
+const Tweet = require('../models/tweet');  
 
 class TweetRepository {
     async getAll(offset = 0, limit = 10) {

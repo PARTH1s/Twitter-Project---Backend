@@ -4,4 +4,4 @@ const connect = async () =>{
     await mongoose.connect('mongodb://localhost/twitter_dev');
 }
 
-module.epxorts = connect;
+module.exports = connect;
