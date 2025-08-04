@@ -1,6 +1,11 @@
 import Tweet from '../models/tweet.js';
+import CrudRepository from './crud-repository.js';
 
-class TweetRepository {
+class TweetRepository extends CrudRepository {
+    constructor() {
+        super(Tweet);
+    }
+
     async getAll(offset = 0, limit = 10) {
         try {
             const tweets = await Tweet.find()
@@ -24,25 +29,25 @@ class TweetRepository {
         }
     }
 
-    async destroy(id) {
-        try {
-            const deletedTweet = await Tweet.findByIdAndDelete(id);
-            return deletedTweet;
-        } catch (error) {
-            console.error('Error in destroy:', error);
-            throw error;
-        }
-    }
+    // async destroy(id) {
+    //     try {
+    //         const deletedTweet = await Tweet.findByIdAndDelete(id);
+    //         return deletedTweet;
+    //     } catch (error) {
+    //         console.error('Error in destroy:', error);
+    //         throw error;
+    //     }
+    // }
 
-    async getById(id) {
-        try {
-            const tweet = await Tweet.findById(id);
-            return tweet;
-        } catch (error) {
-            console.error('Error in getById:', error);
-            throw error;
-        }
-    }
+    // async getById(id) {
+    //     try {
+    //         const tweet = await Tweet.findById(id);
+    //         return tweet;
+    //     } catch (error) {
+    //         console.error('Error in getById:', error);
+    //         throw error;
+    //     }
+    // }
 
     async getWithComments(id) {
         try {
