@@ -3,10 +3,7 @@ import LikeService from "../services/like-service.js";
 const likeService = new LikeService();
 
 export const toggleLike = async (req, res) => {
-    try {
-        console.log("REQ QUERY:", req.query);
-        console.log("REQ BODY:", req.body);
-
+    try { 
         const { modelId, modelType } = req.query;
         const { userId } = req.body;
 

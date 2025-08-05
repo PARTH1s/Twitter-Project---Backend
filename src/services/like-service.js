@@ -13,7 +13,7 @@ class LikeService {
 
     let likeable;
     if (normalizedType === 'tweet') {
-        likeable = await this.tweetRepository.getById(modelId);
+        likeable = await this.tweetRepository.find(modelId);
     } else if (normalizedType === 'comment') {
         // TODO: implement comment repo logic
     } else {
