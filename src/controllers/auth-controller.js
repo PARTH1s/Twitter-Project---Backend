@@ -2,6 +2,11 @@ import UserService from '../services/user-service.js';
 
 const userService = new UserService();
 
+/**
+ * Handles user signup request.
+ * Calls userService.signup with user data from request body.
+ * Returns success response or error on failure.
+ */
 export const signup = async (req, res) => { 
     try {
         const response = await userService.signup({
@@ -27,6 +32,11 @@ export const signup = async (req, res) => {
     }
 };
 
+/**
+ * Handles user login request.
+ * Validates user existence and password.
+ * Returns JWT token on success or error message on failure.
+ */
 export const login = async (req, res) => { 
     try {
         const user = await userService.getUserByEmail(req.body.email);  
@@ -68,6 +78,11 @@ export const login = async (req, res) => {
     }
 };
 
+/**
+ * Handles user signin (login + token generation) request.
+ * Uses userService.signin to authenticate and generate token.
+ * Returns user data and token on success, error on failure.
+ */
 export const signin = async (req, res) => {
     try {
         const { email, password } = req.body;
