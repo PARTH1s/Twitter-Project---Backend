@@ -1,40 +1,60 @@
 import mongoose from "mongoose";
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema(
+  {
     email: {
-        type: String,
-        required: true,
-        unique: true,
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
     },
     password: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
+      minlength: 6,
     },
     name: {
-        type: String,
-        required: true,
-    }
-}, { timestamps: true });
+      type: String,
+      required: true,
+      trim: true,
+    },
+  },
+  { timestamps: true }
+);
 
-userSchema.pre('save', function (next) {
-    const user = this;
-    const SALT = bcrypt.genSaltSync(9);
-    const encryptedPassword = bcrypt.hashSync(user.password, SALT);
-    user.password = encryptedPassword;
+// Hash password before saving user
+userSchema.pre("save", function (next) {
+  const user = this;
+
+  // Only hash the password if it has been modified or is new
+  if (!user.isModified("password")) return next();
+
+  const SALT_ROUNDS = 10;
+  bcrypt.hash(user.password, SALT_ROUNDS, (err, hash) => {
+    if (err) return next(err);
+
+    user.password = hash;
     next();
-})
+  });
+});
 
-userSchema.methods.comparePassword = function compare(password) {
-    return bcrypt.compareSync(password, this.password);
-}
+// Compare given password with hashed password
+userSchema.methods.comparePassword = function (password) {
+  return bcrypt.compareSync(password, this.password);
+};
 
-userSchema.methods.genJWT = function generate() {
-    return jwt.sign({ id: this.id, email: this.email }, 'twitter_secret', {
-        expiresIn: '1h'
-    })
-}
+// Generate JWT token for authenticated user
+userSchema.methods.genJWT = function () {
+  return jwt.sign(
+    { id: this._id, email: this.email },
+    process.env.JWT_SECRET || "twitter_secret",
+    { expiresIn: "1h" }
+  );
+};
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
+
 export default User;
