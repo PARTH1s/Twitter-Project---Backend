@@ -1,72 +1,76 @@
 import Tweet from '../models/tweet.js';
 import CrudRepository from './crud-repository.js';
 
+/**
+ * Repository for handling Tweet-related database operations.
+ * Inherits basic CRUD operations from CrudRepository.
+ */
 class TweetRepository extends CrudRepository {
-    constructor() {
-        super(Tweet);
+  constructor() {
+    super(Tweet);
+  }
+
+  /**
+   * Get all tweets with pagination and latest-first sorting.
+   * @param {number} offset - Number of documents to skip.
+   * @param {number} limit - Number of documents to return.
+   * @returns {Promise<Array>}
+   */
+  async getAll(offset = 0, limit = 10) {
+    try {
+      return await Tweet.find()
+        .skip(offset)
+        .limit(limit)
+        .sort({ createdAt: -1 });
+    } catch (error) {
+      console.error('Error in TweetRepository.getAll:', error);
+      throw error;
     }
+  }
 
-    async getAll(offset = 0, limit = 10) {
-        try {
-            const tweets = await Tweet.find()
-                .skip(offset)
-                .limit(limit)
-                .sort({ createdAt: -1 });
-            return tweets;
-        } catch (error) {
-            console.error('Error in getAll:', error);
-            throw error;
-        }
+  /**
+   * Create a new tweet.
+   * @param {Object} data
+   * @returns {Promise<Object>}
+   */
+  async create(data) {
+    try {
+      return await Tweet.create(data);
+    } catch (error) {
+      console.error('Error in TweetRepository.create:', error);
+      throw error;
     }
+  }
 
-    async create(data) {
-        try {
-            const tweet = await Tweet.create(data);
-            return tweet;
-        } catch (error) {
-            console.error('Error in create:', error);
-            throw error;
-        }
+  /**
+   * Get a tweet along with its comments (nested population).
+   * @param {string} id - Tweet ID
+   * @returns {Promise<Object>}
+   */
+  async getWithComments(id) {
+    try {
+      return await Tweet.findById(id)
+        .populate({ path: 'comments', populate: { path: 'comments' } })
+        .lean();
+    } catch (error) {
+      console.error('Error in TweetRepository.getWithComments:', error);
+      throw error;
     }
+  }
 
-    // async destroy(id) {
-    //     try {
-    //         const deletedTweet = await Tweet.findByIdAndDelete(id);
-    //         return deletedTweet;
-    //     } catch (error) {
-    //         console.error('Error in destroy:', error);
-    //         throw error;
-    //     }
-    // }
-
-    // async getById(id) {
-    //     try {
-    //         const tweet = await Tweet.findById(id);
-    //         return tweet;
-    //     } catch (error) {
-    //         console.error('Error in getById:', error);
-    //         throw error;
-    //     }
-    // }
-
-    async getWithComments(id) {
-        try {
-            const tweet = await Tweet.findById(id).populate({ path: 'comments', populate: { path: 'comments' } }).lean();
-            return tweet;
-        } catch (error) {
-            console.error('Error in getById:', error);
-            throw error;
-        }
+  /**
+   * Find a tweet and populate its likes.
+   * @param {string} id - Tweet ID
+   * @returns {Promise<Object>}
+   */
+  async find(id) {
+    try {
+      return await Tweet.findById(id).populate({ path: 'likes' });
+    } catch (error) {
+      console.error('Error in TweetRepository.find:', error);
+      throw error;
     }
-
-    async find(id) {
-        try {
-            const tweet = await Tweet.findById(id).populate({ path: 'likes' });
-            return tweet;
-        } catch (error) {
-            throw error;
-        }
-    }
+  }
 }
 
 export default TweetRepository;
